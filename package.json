@@ -35,7 +35,8 @@
     "winston": "^3.3.3",
     "winston-daily-rotate-file": "^4.5.5",
     "@swc/cli": "^0.1.51",
-    "@swc/core": "^1.2.108"
+    "@swc/core": "^1.2.108",
+    "cross-env": "^7.0.3"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
@@ -54,7 +55,6 @@
     "@types/winston": "^2.4.4",
     "@typescript-eslint/eslint-plugin": "^4.28.2",
     "@typescript-eslint/parser": "^4.28.2",
-    "cross-env": "^7.0.3",
     "eslint": "^7.30.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
