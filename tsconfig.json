@@ -1,7 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "es2017",
     "lib": ["es2017", "esnext.asynciterable"],
     "typeRoots": ["node_modules/@types"],
     "allowSyntheticDefaultImports": true,
@@ -9,7 +9,7 @@
     "emitDecoratorMetadata": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
-    "module": "ES2022",
+    "module": "commonjs",
     "pretty": true,
     "sourceMap": true,
     "declaration": true,

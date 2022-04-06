@@ -3,7 +3,6 @@ import path from 'path';
 import winston from 'winston';
 import winstonDaily from 'winston-daily-rotate-file';
 import { LOG_DIR } from '@config';
-
 // logs dir
 const logDir: string = path.join(__dirname, LOG_DIR);
 
