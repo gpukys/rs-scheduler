@@ -1,6 +1,6 @@
 import { join } from 'path';
 import { ConnectionOptions } from 'typeorm';
-import { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_DATABASE } from '@config';
+import { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_DATABASE, NODE_ENV } from '@config';
 
 export const dbConnection: ConnectionOptions = {
   type: 'postgres',
@@ -12,7 +12,7 @@ export const dbConnection: ConnectionOptions = {
   synchronize: true,
   logging: false,
   ssl: {
-    rejectUnauthorized: false,
+    rejectUnauthorized: NODE_ENV !== 'production',
   },
   entities: [join(__dirname, '../**/*.entity{.ts,.js}')],
   migrations: [join(__dirname, '../**/*.migration{.ts,.js}')],

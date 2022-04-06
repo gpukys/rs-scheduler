@@ -12,6 +12,7 @@ import { dbConnection } from '@databases';
 import { Routes } from '@interfaces/routes.interface';
 import errorMiddleware from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
+import path from 'path';
 
 class App {
   public app: express.Application;
@@ -61,6 +62,7 @@ class App {
     routes.forEach(route => {
       this.app.use('/', route.router);
     });
+    this.app.use('/', express.static(path.join(__dirname, '../client')));
   }
 
   private initializeErrorHandling() {
