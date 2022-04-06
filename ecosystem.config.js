@@ -10,7 +10,7 @@ module.exports = {
       name: 'prod', // pm2 start App name
       script: 'dist/server.js',
       exec_mode: 'cluster', // 'cluster' or 'fork'
-      instances: 'max', // pm2 instance count
+      instances: 1, // pm2 instance count
       autorestart: true, // auto restart if process crash
       watch: false, // files change automatic restart
       ignore_watch: ['node_modules', 'logs'], // ignore files change
