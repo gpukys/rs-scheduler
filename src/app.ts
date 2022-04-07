@@ -8,7 +8,7 @@ import morgan from 'morgan';
 import compression from 'compression';
 import { createConnection } from 'typeorm';
 import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from '@config';
-import { dbConnection } from '@databases';
+import { getDbConnection } from '@databases';
 import { Routes } from '@interfaces/routes.interface';
 import errorMiddleware from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
@@ -44,7 +44,7 @@ class App {
   }
 
   private connectToDatabase() {
-    createConnection(dbConnection);
+    createConnection(getDbConnection());
   }
 
   private initializeMiddlewares() {

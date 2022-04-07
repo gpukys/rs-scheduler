@@ -1,42 +1,51 @@
 import { NextFunction, Request, Response } from 'express';
-import { CreateUserDto } from '@dtos/users.dto';
-import { RequestWithUser } from '@interfaces/auth.interface';
-import { User } from '@interfaces/users.interface';
-import AuthService from '@services/auth.service';
-
+import { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI } from '@/config';
+import axios from 'axios';
 class AuthController {
-  public authService = new AuthService();
-
-  public signUp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public exchangeCode = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userData: CreateUserDto = req.body;
-      const signUpUserData: User = await this.authService.signup(userData);
+      const code = req.body.code;
+      const params = new URLSearchParams();
+      params.append('client_id', CLIENT_ID);
+      params.append('client_secret', CLIENT_SECRET);
+      params.append('grant_type', 'authorization_code');
+      params.append('code', code);
+      params.append('redirect_uri', REDIRECT_URI);
 
-      res.status(201).json({ data: signUpUserData, message: 'signup' });
+      const tokenRes = await axios
+        .post('https://discord.com/api/oauth2/token', params, {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        })
+        .catch(err => {
+          throw err.response;
+        });
+      res.status(200).json({ data: tokenRes.data, message: 'exchangeToken' });
     } catch (error) {
       next(error);
     }
   };
 
-  public logIn = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public refreshToken = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userData: CreateUserDto = req.body;
-      const { cookie, findUser } = await this.authService.login(userData);
+      const refToken = req.body.refreshToken;
+      const params = new URLSearchParams();
+      params.append('client_id', CLIENT_ID);
+      params.append('client_secret', CLIENT_SECRET);
+      params.append('grant_type', 'refresh_token');
+      params.append('refresh_token', refToken);
 
-      res.setHeader('Set-Cookie', [cookie]);
-      res.status(200).json({ data: findUser, message: 'login' });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  public logOut = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const userData: User = req.user;
-      const logOutUserData: User = await this.authService.logout(userData);
-
-      res.setHeader('Set-Cookie', ['Authorization=; Max-age=0']);
-      res.status(200).json({ data: logOutUserData, message: 'logout' });
+      const tokenRes = await axios
+        .post('https://discord.com/api/oauth2/token', params, {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        })
+        .catch(err => {
+          throw err.response;
+        });
+      res.status(200).json({ data: tokenRes.data, message: 'refreshToken' });
     } catch (error) {
       next(error);
     }

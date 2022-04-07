@@ -16,12 +16,16 @@
     "deploy:dev": "pm2-runtime start ecosystem.config.js --only dev"
   },
   "dependencies": {
+    "@swc/cli": "^0.1.51",
+    "@swc/core": "^1.2.108",
+    "axios": "^0.26.1",
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv": "^10.0.0",
     "envalid": "^7.1.0",
     "express": "^4.17.1",
@@ -29,15 +33,13 @@
     "hpp": "^0.2.3",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
+    "passport-discord": "^0.1.4",
     "pg": "^8.6.0",
+    "pm2": "^5.1.0",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.2.34",
     "winston": "^3.3.3",
-    "winston-daily-rotate-file": "^4.5.5",
-    "@swc/cli": "^0.1.51",
-    "@swc/core": "^1.2.108",
-    "cross-env": "^7.0.3",
-    "pm2": "^5.1.0"
+    "winston-daily-rotate-file": "^4.5.5"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
