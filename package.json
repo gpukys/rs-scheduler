@@ -8,11 +8,12 @@
     "ui"
   ],
   "scripts": {
+    "postinstall": "npm run -w ui build:ui && npm run -w api build:server",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev:ui": "npm run -w ui dev:ui",
     "dev:api": "npm run -w api dev:server",
     "dev": "npm-run-all -p dev:ui dev:api",
-    "deploy:prod": "npm run -w ui build:ui && npm run -w api build:server && pm2-runtime start ./api/ecosystem.config.js --only prod"
+    "deploy:prod": "pm2-runtime start ./api/ecosystem.config.js --only prod"
   },
   "repository": {
     "type": "git",
