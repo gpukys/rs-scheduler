@@ -62,7 +62,7 @@ class App {
     routes.forEach(route => {
       this.app.use('/', route.router);
     });
-    this.app.use('/', express.static(path.join(__dirname, '../client')));
+    this.app.use('/', express.static(path.join(__dirname, '../dist/public')));
   }
 
   private initializeErrorHandling() {
