@@ -8,7 +8,7 @@ module.exports = {
   apps: [
     {
       name: 'prod', // pm2 start App name
-      script: 'dist/server.js',
+      script: 'api/dist/server.js',
       exec_mode: 'cluster', // 'cluster' or 'fork'
       instances: 'max', // pm2 instance count
       autorestart: true, // auto restart if process crash
@@ -19,7 +19,7 @@ module.exports = {
       error: './logs/error.log', // pm2 error log file
       env: {
         NODE_ENV: 'production',
-      },
+      }
     },
   ],
 };
