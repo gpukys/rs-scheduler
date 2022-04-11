@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import DiscordService from '@/services/discord.service';
-import { RS_SCHOOL_GUILD_ID, RS_SCHOOL_MENTOR_ID } from '@/constants/discord.constants';
+import { RS_SCHOOL_GUILD_ID, RS_SCHOOL_MENTOR_ID, RS_SCHOOL_MODERATOR_ID } from '@/constants/discord.constants';
 import { Role } from '@/models';
 
 class AuthController {
@@ -22,8 +22,8 @@ class AuthController {
         const roles = [];
         if (discordRoles.includes(RS_SCHOOL_MENTOR_ID)) {
           roles.push(Role.MENTOR)
-        } else if (discordRoles.includes(RS_SCHOOL_MENTOR_ID)) {
-          roles.push(Role.MENTOR);
+        } else if (discordRoles.includes(RS_SCHOOL_MODERATOR_ID)) {
+          roles.push(Role.MODERATOR);
         } else {
           roles.push(Role.STUDENT);
         }
@@ -39,8 +39,7 @@ class AuthController {
         // Update the session
         req.session.user = user;
 
-        res.redirect('/');
-
+        res.status(200).json({ user });
       } else {
         next(new Error('Such user does not exist in the given guild.'));
       }
