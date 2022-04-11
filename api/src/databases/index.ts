@@ -1,8 +1,11 @@
 import { join } from 'path';
 import { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_DATABASE, NODE_ENV } from '@config';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
+import { DataSource } from 'typeorm';
 
-export function getDbConnection(): PostgresConnectionOptions {
+export const dataSource = new DataSource(getDbConnection());
+
+function getDbConnection(): PostgresConnectionOptions {
   const connectionOptions: PostgresConnectionOptions = {
     type: 'postgres',
     host: DB_HOST,

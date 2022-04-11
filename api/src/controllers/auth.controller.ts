@@ -18,22 +18,12 @@ class AuthController {
 
     if (accessToken) {
       const discordRoles = await this.discordService.getMemberRolesInGuild(RS_SCHOOL_GUILD_ID, accessToken);
-      if (discordRoles) {
-        const roles = [];
-        if (discordRoles.includes(RS_SCHOOL_MENTOR_ID)) {
-          roles.push(Role.MENTOR)
-        } else if (discordRoles.includes(RS_SCHOOL_MODERATOR_ID)) {
-          roles.push(Role.MODERATOR);
-        } else {
-          roles.push(Role.STUDENT);
-        }
-        
-        // If the user does not have any roles, then treat them as a Student
-        if (roles.length === 0) {
-          roles.push(Role.STUDENT);
-        }
 
+      if (discordRoles) {
+        const roles = this.getFormattedDiscordRoles(discordRoles);
         const user = await this.discordService.getUser(accessToken);
+
+        // Assign user roles
         user.roles = roles;
 
         // Update the session
@@ -52,6 +42,20 @@ class AuthController {
     req.session.destroy(() => {
       res.status(200).send();
     });
+  }
+
+  private getFormattedDiscordRoles(discordRoles: string[]): Role[] {
+    const roles = [];
+
+    if (discordRoles.includes(RS_SCHOOL_MENTOR_ID)) {
+      roles.push(Role.MENTOR)
+    } else if (discordRoles.includes(RS_SCHOOL_MODERATOR_ID)) {
+      roles.push(Role.MODERATOR);
+    } else {
+      roles.push(Role.STUDENT);
+    }
+
+    return roles;
   }
 
 }
