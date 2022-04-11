@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChil
 import { CalendarEvent } from 'angular-calendar';
 import { add, isAfter, isBefore, sub } from 'date-fns';
 import { Subject } from 'rxjs';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-scheduler',
@@ -39,10 +40,15 @@ export class SchedulerComponent implements OnInit {
   ]
 
   constructor(
+    private auth: AuthService
   ) { }
 
   ngOnInit(): void {
     console.log(this.today)
+    this.auth.fakePath().subscribe({
+      next: (res) => console.log(res),
+      error: (err) => console.log('inner handle', err)
+    })
   }
 
   previousWeek() {
