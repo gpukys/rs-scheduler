@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import morgan from 'morgan';
 import compression from 'compression';
+import session from 'express-session';
 import { createConnection } from 'typeorm';
 import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from '@config';
 import { getDbConnection } from '@databases';
@@ -56,6 +57,22 @@ class App {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
+
+    const sessionConfig = {
+      secret: 'secret key',
+      resave: false,
+      saveUninitialized: true,
+      cookie: {
+        secure: false
+      }
+    };
+
+    if (this.app.get('env') === 'production') {
+      this.app.set('trust proxy', 1);
+      sessionConfig.cookie.secure = true; 
+    }
+    
+    this.app.use(session(sessionConfig));
   }
 
   private initializeRoutes(routes: Routes[]) {

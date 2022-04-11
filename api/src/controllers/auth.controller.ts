@@ -1,55 +1,60 @@
 import { NextFunction, Request, Response } from 'express';
-import { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI } from '@/config';
-import axios from 'axios';
+import DiscordService from '@/services/discord.service';
+import { RS_SCHOOL_GUILD_ID, RS_SCHOOL_MENTOR_ID } from '@/constants/discord.constants';
+import { Role } from '@/models';
+
 class AuthController {
-  public exchangeCode = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const code = req.body.code;
-      const params = new URLSearchParams();
-      params.append('client_id', CLIENT_ID);
-      params.append('client_secret', CLIENT_SECRET);
-      params.append('grant_type', 'authorization_code');
-      params.append('code', code);
-      params.append('redirect_uri', REDIRECT_URI);
+  
+  discordService = new DiscordService();
 
-      const tokenRes = await axios
-        .post('https://discord.com/api/oauth2/token', params, {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        })
-        .catch(err => {
-          throw err.response;
-        });
-      res.status(200).json({ data: tokenRes.data, message: 'exchangeToken' });
-    } catch (error) {
-      next(error);
+  getUser(req: Request, res: Response) {
+    const user = req.session.user ?? null;
+    res.status(200).json({ user });
+  }
+
+  async discordLogin(req: Request, res: Response, next: NextFunction) {
+    const code = req.query.code as string;
+    const accessToken = await this.discordService.getAccessToken(code);
+
+    if (accessToken) {
+      const discordRoles = await this.discordService.getMemberRolesInGuild(RS_SCHOOL_GUILD_ID, accessToken);
+      if (discordRoles) {
+        const roles = [];
+        if (discordRoles.includes(RS_SCHOOL_MENTOR_ID)) {
+          roles.push(Role.MENTOR)
+        } else if (discordRoles.includes(RS_SCHOOL_MENTOR_ID)) {
+          roles.push(Role.MENTOR);
+        } else {
+          roles.push(Role.STUDENT);
+        }
+        
+        // If the user does not have any roles, then treat them as a Student
+        if (roles.length === 0) {
+          roles.push(Role.STUDENT);
+        }
+
+        const user = await this.discordService.getUser(accessToken);
+        user.roles = roles;
+
+        // Update the session
+        req.session.user = user;
+
+        res.redirect('/');
+
+      } else {
+        next(new Error('Such user does not exist in the given guild.'));
+      }
+    } else {
+      next(new Error('Could not retrieve an access token.'));
     }
-  };
+  }
 
-  public refreshToken = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const refToken = req.body.refreshToken;
-      const params = new URLSearchParams();
-      params.append('client_id', CLIENT_ID);
-      params.append('client_secret', CLIENT_SECRET);
-      params.append('grant_type', 'refresh_token');
-      params.append('refresh_token', refToken);
+  logout(req: Request, res: Response) {
+    req.session.destroy(() => {
+      res.status(200).send();
+    });
+  }
 
-      const tokenRes = await axios
-        .post('https://discord.com/api/oauth2/token', params, {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        })
-        .catch(err => {
-          throw err.response;
-        });
-      res.status(200).json({ data: tokenRes.data, message: 'refreshToken' });
-    } catch (error) {
-      next(error);
-    }
-  };
 }
 
 export default AuthController;
