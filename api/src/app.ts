@@ -6,13 +6,16 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import morgan from 'morgan';
 import compression from 'compression';
-import { createConnection } from 'typeorm';
+import session from 'express-session';
+import { createConnection, getConnection } from 'typeorm';
 import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from '@config';
-import { getDbConnection } from '@databases';
+import { dataSource } from '@databases';
 import { Routes } from '@interfaces/routes.interface';
 import errorMiddleware from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
 import path from 'path';
+import { TypeormStore } from 'connect-typeorm';
+import { Session } from './entities/session.entity';
 
 class App {
   public app: express.Application;
@@ -44,7 +47,14 @@ class App {
   }
 
   private connectToDatabase() {
-    createConnection(getDbConnection());
+    dataSource
+      .initialize()
+      .then(() => {
+        console.log("Data Source has been initialized!")
+      })
+      .catch((err) => {
+        console.error("Error during Data Source initialization:", err)
+      });
   }
 
   private initializeMiddlewares() {
@@ -56,6 +66,31 @@ class App {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
+    this.initSessionMiddleware();
+  }
+
+  private initSessionMiddleware() {
+    const sessionRepository = dataSource.getRepository(Session);
+
+    const sessionConfig = {
+      secret: 'my-secret-key',
+      resave: false,
+      saveUninitialized: true,
+      cookie: {
+        secure: false
+      },
+      store: new TypeormStore({
+        cleanupLimit: 2,
+        ttl: 86400
+      }).connect(sessionRepository),
+    };
+
+    if (this.app.get('env') === 'production') {
+      this.app.set('trust proxy', 1);
+      sessionConfig.cookie.secure = true; 
+    }
+
+    this.app.use(session(sessionConfig));
   }
 
   private initializeRoutes(routes: Routes[]) {
