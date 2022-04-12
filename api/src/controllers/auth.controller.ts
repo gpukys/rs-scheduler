@@ -3,7 +3,8 @@ import DiscordService from '@/services/discord.service';
 import { RS_SCHOOL_GUILD_ID, RS_SCHOOL_MENTOR_ID, RS_SCHOOL_MODERATOR_ID } from '@/constants/discord.constants';
 import { Role } from '@/models';
 import { dataSource } from '@/databases';
-import { UserEntity } from '@/entities/user.entity';
+import { StudentEntity } from '@/entities/student.entity';
+import { MentorEntity } from '@/entities/mentor.entity';
 
 class AuthController {
   
@@ -27,12 +28,13 @@ class AuthController {
 
         // Assign user roles
         user.roles = roles;
+        const entity = roles.includes(Role.MENTOR) ? MentorEntity : StudentEntity
 
         // Update the session
-        const repository = dataSource.getRepository(UserEntity);
+        const repository = dataSource.getRepository(entity);
         const existingUser = await repository.findOneBy({discordID: user.discordID});
         if (!existingUser) {
-          const newUser = new UserEntity();
+          const newUser = new entity();
           newUser.discordID = user.discordID;
           newUser.color = `#${Math.floor(Math.random()*16777215).toString(16)}`;
           user.color = newUser.color;
