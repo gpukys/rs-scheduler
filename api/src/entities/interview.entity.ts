@@ -17,11 +17,11 @@ export class InterviewEntity extends BaseEntity implements Interview {
   @ManyToOne(() => MentorEntity, (user) => user.interviews)
     mentor: Mentor
 
-  @Column('timetz')
+  @Column('timestamp with time zone')
   @IsNotEmpty()
   startDate: string;
 
-  @Column('timetz')
+  @Column('timestamp with time zone')
   @IsNotEmpty()
   endDate: string;
 
