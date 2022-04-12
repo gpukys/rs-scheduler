@@ -5,4 +5,5 @@ export interface DiscordUser {
     username: string;
     avatarURL: string;
     roles: Role[];
+    color: string;
 }

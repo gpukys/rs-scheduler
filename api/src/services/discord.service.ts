@@ -60,7 +60,8 @@ class DiscordService {
             discordID: data.id,
             username: data.username,
             avatarURL: `https://cdn.discordapp.com/avatars/${data.id}/${data.avatar}.png`,
-            roles: []
+            roles: [],
+            color: null
         };
     }
 }
