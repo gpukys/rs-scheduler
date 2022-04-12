@@ -1,3 +1,8 @@
-<!-- <button routerLink="/schedule"></button> -->
-<button (click)="login()">Login</button>
-<button (click)="request()">request</button>
+<main fxLayout="column" fxLayoutAlign="center center">
+  <h1>RS Interview app</h1>
+  <p>Please login to continue</p>
+  <button mat-raised-button [class.spinner]="isLoading" [disabled]="isLoading" (click)="login()">
+    Login with discord
+  </button>
+
+</main>

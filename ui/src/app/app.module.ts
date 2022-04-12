@@ -9,17 +9,21 @@ import { HomeComponent } from './home/home.component';
 import { AuthService } from './services/auth.service';
 import { Router } from '@angular/router';
 import { UnauthorizedInterceptor } from './interceptors/unauthorized.interceptor';
+import { MatModule } from './mat.module';
+import { SharedModule } from './shared.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    HttpClientModule
+    HttpClientModule,
+    MatModule,
+    SharedModule
   ],
   providers: [
     AuthService,

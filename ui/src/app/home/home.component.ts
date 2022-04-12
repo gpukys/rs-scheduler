@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { takeWhile } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { AuthService, UserRoles } from '../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -10,24 +12,32 @@ import { AuthService } from '../services/auth.service';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private auth: AuthService, private route: ActivatedRoute) { }
+  constructor(private auth: AuthService, private route: ActivatedRoute, private router: Router) { }
+
+  isLoading = false;
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      if (params['code']) {
-        this.auth.authorize(params['code']).subscribe(res => {
-          console.log('auth/discord-login', res);
+      const code = params['code'];
+      if (code) {
+        this.isLoading = true;
+        this.auth.authorize(code).subscribe(res => {
+          if (res.user) {
+            const isMentor = res.user.roles.indexOf(UserRoles.mentor) !== -1;
+            if (isMentor) {
+              this.router.navigate(['mentor'])
+            } else {
+              this.router.navigate(['student'])
+            }
+          }
+          this.isLoading = false;
         })
       }
     })
   }
 
   login() {
-    window.open('https://discord.com/api/oauth2/authorize?client_id=961538488086446112&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2F&response_type=code&scope=identify%20guilds%20guilds.members.read', '_self')
+    this.isLoading = true;
+    window.open(environment.discordLoginUrl, '_self')
   }
-
-  request() {
-    this.auth.getCurrentUser().subscribe(res => console.log('auth/user', res));
-  }
-
 }

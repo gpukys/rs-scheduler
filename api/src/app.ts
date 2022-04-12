@@ -7,7 +7,6 @@ import hpp from 'hpp';
 import morgan from 'morgan';
 import compression from 'compression';
 import session from 'express-session';
-import { createConnection, getConnection } from 'typeorm';
 import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from '@config';
 import { dataSource } from '@databases';
 import { Routes } from '@interfaces/routes.interface';
@@ -61,7 +60,12 @@ class App {
     this.app.use(morgan(LOG_FORMAT, { stream }));
     this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }));
     this.app.use(hpp());
-    this.app.use(helmet());
+    this.app.use(helmet.contentSecurityPolicy({
+      useDefaults: true,
+      directives: {
+        "img-src": ["'self'", "http: data:", "https: data:"]
+      }
+    }));
     this.app.use(compression());
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
@@ -95,9 +99,10 @@ class App {
 
   private initializeRoutes(routes: Routes[]) {
     routes.forEach(route => {
-      this.app.use('/', route.router);
+      this.app.use('/api', route.router);
     });
-    this.app.use('/', express.static(path.join(__dirname, 'public')));
+    this.app.use(express.static(path.join(__dirname, '../dist/public')));
+    this.app.use('*', express.static(path.join(__dirname, '../dist/public')));
   }
 
   private initializeErrorHandling() {

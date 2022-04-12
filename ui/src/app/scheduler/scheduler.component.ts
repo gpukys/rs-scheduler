@@ -44,11 +44,6 @@ export class SchedulerComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.today)
-    this.auth.fakePath().subscribe({
-      next: (res) => console.log(res),
-      error: (err) => console.log('inner handle', err)
-    })
   }
 
   previousWeek() {

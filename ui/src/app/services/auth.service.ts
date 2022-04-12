@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { delay, map, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, iif, map, mergeMap, Observable, of, shareReplay, Subject, tap } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 export interface User {
   discordID: string,
@@ -14,36 +15,30 @@ export enum UserRoles {
   mentor = 'MENTOR'
 }
 
-const userMock = {"user":{"discordID":"275340328939028482","username":"gerimantasp","avatarURL":"https://cdn.discordapp.com/avatars/275340328939028482/a4ec2e5470872744766cb745325d8472.png","roles":[UserRoles.mentor]}}
-
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-
-  private user$: Observable<User> | null = null;
+  readonly apiPrefix = environment.apiRoot;
+  private user$: BehaviorSubject<User | null>  = new BehaviorSubject<User | null>(null);
 
   constructor(
     private http: HttpClient
   ) { }
 
-  authorize(code: string) {
-    return this.http.get(`http://localhost:3000/auth/discord-login?code=${code}`);
+  authorize(code: string): Observable<{user: User}> {
+    return this.http.get<{user: User}>(`${this.apiPrefix}auth/discord-login?code=${code}`).pipe(tap(res => this.user$.next(res.user)));
   }
 
-  getCurrentUser() {
-    if (!this.user$) {
-      return this.http.get<{user: User}>('http://localhost:3000/auth/user').pipe(map(e => e.user), tap(res => {
-        if (res) {
-          this.user$ = of(res);
-        }
-      }));
+  getCurrentUser(): BehaviorSubject<User | null> {
+    if (!this.user$.value) {
+      this.http.get<{user: User}>(`${this.apiPrefix}auth/user`).subscribe(res => this.user$.next(res.user))
     }
     return this.user$;
   }
 
-  logout() {
-    this.user$ = null;
+  logout(): Observable<any> {
+    return this.http.post(`${this.apiPrefix}auth/logout`, {}).pipe(tap(() => this.user$.next(null)))
   }
 
   fakePath() {
