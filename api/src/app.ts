@@ -96,7 +96,6 @@ class App {
     routes.forEach(route => {
       this.app.use('/api', route.router);
     });
-    console.log(__dirname)
     this.app.use(express.static(path.join(__dirname, '/public')));
     this.app.use('*', express.static(path.join(__dirname, '/public')));
   }
