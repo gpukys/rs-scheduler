@@ -59,7 +59,7 @@ class DiscordService {
         return {
             discordID: data.id,
             username: data.username,
-            avatarURL: `https://cdn.discordapp.com/avatars/${data.id}/${data.avatar}.png`,
+            avatarURL: data.avatar ? `https://cdn.discordapp.com/avatars/${data.id}/${data.avatar}.png` : null,
             roles: [],
             color: null
         };

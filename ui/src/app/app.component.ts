@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, takeUntil, takeWhile } from 'rxjs';
 import { AuthService, User, UserRoles } from './services/auth.service';
 
 @Component({
@@ -10,7 +10,9 @@ import { AuthService, User, UserRoles } from './services/auth.service';
 })
 export class AppComponent {
   constructor(private auth: AuthService, private router: Router, private route: ActivatedRoute) {
-    this.auth.getCurrentUser().subscribe(res => {
+    this.auth.user$
+      .pipe(takeWhile(res => !!res))
+      .subscribe(res => {
       if (res) {
         const isMentor = res.roles.indexOf(UserRoles.mentor) !== -1;
         const location = window.location.href;

@@ -61,9 +61,9 @@ class App {
     this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }));
     this.app.use(hpp());
     this.app.use(helmet.contentSecurityPolicy({
-      useDefaults: true,
       directives: {
-        "img-src": ["'self'", "http: data:", "https: data:"]
+        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+        "img-src": ["'self'", "http: data:", "https: data:"],
       }
     }));
     this.app.use(compression());

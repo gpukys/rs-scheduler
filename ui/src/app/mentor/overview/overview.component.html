@@ -1,0 +1,11 @@
+<div class="container" fxLayout="column" fxLayoutAlign="center center" *ngIf="status">
+  <h1>You currently <span class="{{status.hasScheduled ? 'green' : 'red'}} bold">{{status.hasScheduled ? 'HAVE assigned' : 'DON\'T HAVE assigned'}}</span> interviews.</h1>
+  <ng-container *ngIf="status.hasScheduled">
+    <h2 *ngIf="status.closestInterview">Your earliest interview with {{status.closestInterview.student?.username}} has been scheduled for {{status.closestInterview.startDate| date:'MM-dd HH:mm'}}.</h2>
+  </ng-container>
+  <div fxLayout="column" fxLayoutAlign="center center">
+    <h2 *ngIf="!status.hasScheduled">Go pick any available time you from the scheduler, the demand is high!</h2>
+    <h2 *ngIf="status.hasScheduled">You can still select more times from the scheduler, the demand is high!</h2>
+    <button routerLink="/mentor/schedule" mat-raised-button color="primary">Go to scheduler</button>
+  </div>
+</div>

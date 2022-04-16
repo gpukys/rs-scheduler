@@ -5,6 +5,7 @@ import { Role } from '@/models';
 import { dataSource } from '@/databases';
 import { StudentEntity } from '@/entities/student.entity';
 import { MentorEntity } from '@/entities/mentor.entity';
+import { HttpException } from '@/exceptions/HttpException';
 
 class AuthController {
   
@@ -37,6 +38,7 @@ class AuthController {
           const newUser = new entity();
           newUser.discordID = user.discordID;
           newUser.color = `#${Math.floor(Math.random()*16777215).toString(16)}`;
+          newUser.username = user.username;
           user.color = newUser.color;
           await newUser.save();
         } else {
@@ -45,7 +47,7 @@ class AuthController {
         req.session.user = user;
         res.status(200).json({ user });
       } else {
-        next(new Error('Such user does not exist in the given guild.'));
+        next(new HttpException(400, 'You need to be a member of "rs-school-lt" to log in'));
       }
     } else {
       next(new Error('Could not retrieve an access token.'));

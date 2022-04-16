@@ -12,6 +12,9 @@ export class StudentEntity extends BaseEntity implements Student {
   @IsNotEmpty()
   color: string;
 
-  @OneToMany(() => InterviewEntity, (interview) => interview.student)
+  @Column()
+  username: string;
+
+  @OneToMany(() => InterviewEntity, (interview) => interview.student, { cascade: true, onDelete: "CASCADE" })
     interviews: InterviewEntity[];
 }

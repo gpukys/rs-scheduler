@@ -1,4 +1,28 @@
+.container {
+  margin: 16px;
+}
 
-::ng-deep .cal-hour {
-  cursor: pointer;
+
+::ng-deep {
+  .cal-hour {
+    cursor: pointer;
+  }
+  .cal-week-view .cal-time-events .cal-event {
+    width: calc(100% - 16px);
+  }
+  .cal-event-container {
+    &.light {
+      .cal-event {
+        color: #fff;
+        img {
+          filter: invert(1);
+        }
+      }
+    }
+    &.dark {
+      .cal-event {
+        color: #000;
+      }
+    }
+  }
 }

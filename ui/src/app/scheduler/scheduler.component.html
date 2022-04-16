@@ -1,13 +1,18 @@
-<div>
-  <button (click)="previousWeek()" [disabled]="canSeePreviousWeek()">Previous week</button>
-  <button (click)="nextWeek()">Next week</button>
+<div class="container">
+  <div fxLayout="row" fxLayoutGap="8px" class="controls">
+    <button mat-raised-button color="primary" (click)="previousWeek()" [disabled]="cantSeePreviousWeek()">Previous week</button>
+    <button mat-raised-button color="primary" (click)="nextWeek()" [disabled]="cantSeeNextWeek()">Next week</button>
+  </div>
+  <mwl-calendar-week-view
+    [viewDate]="today"
+    [events]="events"
+    [dayStartHour]="8"
+    [dayEndHour]="17"
+    [excludeDays]="[6,0]"
+    [refresh]="refresh"
+    [validateEventTimesChanged]="validate.bind(this)"
+    (eventClicked)="handleEventClick($event)"
+    (hourSegmentClicked)="handleSegmentClick($event)"
+    (eventTimesChanged)="handleTimesChanged($event)">
+  </mwl-calendar-week-view>
 </div>
-<mwl-calendar-week-view
-  [viewDate]="today"
-  [events]="mockEvents"
-  [dayStartHour]="8"
-  [dayEndHour]="17"
-  [excludeDays]="[6,0]"
-  (eventClicked)="handleEventClick($event)"
-  (hourSegmentClicked)="handleSegmentClick($event)">
-</mwl-calendar-week-view>

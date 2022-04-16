@@ -2,6 +2,23 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+.bold {
+  font-weight: bold;
+}
+
+.icon {
+  height: 12px;
+  width: 12px;
+}
+
+.green {
+  color: #226d22
+}
+
+.red {
+  color: #b91c1c
+}
+
 @keyframes spinner {
   to {transform: rotate(360deg);}
 }

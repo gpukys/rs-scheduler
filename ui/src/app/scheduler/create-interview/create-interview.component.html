@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>Start point confirmation</h1>
+<div mat-dialog-content>
+  <p>You are about to create a starting point for an interview at</p>
+  <p>
+    <span class="bold">{{data.startDate | date:"YYYY-MM-dd HH:mm"}}</span>
+  </p>
+  <p>You will be able to extend this timeframe after creation as needed</p>
+</div>
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
+  <button mat-button mat-dialog-close="" [disabled]="loading">Cancel</button>
+  <button mat-button color="primary" [disabled]="loading" (click)="confirm()" cdkFocusInitial>Confirm</button>
+</div>

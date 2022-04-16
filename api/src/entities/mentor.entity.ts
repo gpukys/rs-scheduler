@@ -9,9 +9,11 @@ export class MentorEntity extends BaseEntity implements Mentor {
   discordID: string;
 
   @Column()
-  @IsNotEmpty()
   color: string;
 
-  @OneToMany(() => InterviewEntity, (interview) => interview.mentor)
+  @Column()
+  username: string;
+
+  @OneToMany(() => InterviewEntity, (interview) => interview.mentor, { cascade: true, onDelete: "CASCADE" })
     interviews: InterviewEntity[];
 }

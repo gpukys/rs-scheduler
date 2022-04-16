@@ -11,6 +11,8 @@ import { Router } from '@angular/router';
 import { UnauthorizedInterceptor } from './interceptors/unauthorized.interceptor';
 import { MatModule } from './mat.module';
 import { SharedModule } from './shared.module';
+import { SnackbarService } from './services/snackbar.service';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
@@ -35,6 +37,7 @@ import { SharedModule } from './shared.module';
       multi: true,
       deps: [Router, AuthService]
    },
+   SnackbarService
   ],
   bootstrap: [AppComponent]
 })

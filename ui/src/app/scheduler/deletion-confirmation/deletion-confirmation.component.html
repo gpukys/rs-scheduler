@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>Deletion confirmation</h1>
+<div mat-dialog-content>
+  <p>You are about to delete this interview timeframe</p>
+</div>
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
+  <button mat-button mat-dialog-close="" [disabled]="loading">Cancel</button>
+  <button mat-button color="warn" [disabled]="loading" (click)="confirm()" cdkFocusInitial>Delete</button>
+</div>

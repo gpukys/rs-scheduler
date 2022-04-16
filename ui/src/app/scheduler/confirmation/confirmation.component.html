@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>Confirm interview</h1>
+<div mat-dialog-content>
+  <p>Please select a specific time from this timeframe</p>
+  <p><span class="bold">WARNING</span> This will confirm the interview and you must contact the student yourself to organise a meeting platform at that time. In case of a no show candidate, please wait 10 minutes for him to turn up to the interview. Interview duration - 1 hour </p>
+  <form [formGroup]="form">
+    <mat-form-field>
+      <input matInput formControlName="startDate" type="datetime-local" placeholder="Start date">
+      <mat-error *ngIf="form.get('startDate')?.errors?.['notSoonerThan']">Should not be sooner than {{form.get('startDate')?.errors?.['notSoonerThan'] | date:'HH:mm'}}</mat-error>
+      <mat-error *ngIf="form.get('startDate')?.errors?.['notLaterThan']">Should not be later than {{form.get('startDate')?.errors?.['notLaterThan'] | date:'HH:mm'}}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput formControlName="endDate" type="datetime-local" placeholder="End date" >
+    </mat-form-field>
+  </form>
+
+</div>
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
+  <button mat-button mat-dialog-close="" [disabled]="loading || form.invalid">Cancel</button>
+  <button mat-button color="primary" [disabled]="loading || form.invalid" (click)="confirm()" cdkFocusInitial>Confirm</button>
+</div>

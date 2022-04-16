@@ -1,0 +1,14 @@
+<div class="container" fxLayout="column" fxLayoutAlign="center center" *ngIf="status">
+  <h1>You currently <span class="{{status.hasScheduled ? 'green' : 'red'}} bold">{{status.hasScheduled ? 'HAVE specified' : 'DIDN\'T specify'}}</span> your timeframes for an interview.</h1>
+  <ng-container *ngIf="status.hasScheduled else noSchedule">
+    <h2 *ngIf="status.closestInterview">Your interview has been scheduled for {{status.closestInterview.startDate| date:'MM-dd HH:mm'}}. Your interviewer is {{status.closestInterview.mentor?.username}}</h2>
+    <h2 *ngIf="!status.closestInterview">An interviewer has not yet been assigned to you. Please be patient, or add more timeframes</h2>
+  </ng-container>
+</div>
+
+<ng-template #noSchedule>
+  <div fxLayout="column" fxLayoutAlign="center center">
+    <h2>Go specify your timeframes now</h2>
+    <button routerLink="/student/schedule" mat-raised-button color="primary">Go to scheduler</button>
+  </div>
+</ng-template>
