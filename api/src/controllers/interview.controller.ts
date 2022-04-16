@@ -114,14 +114,17 @@ class InterviewController {
     try {
       const interviewRepo = dataSource.getRepository(InterviewEntity);
       let interviews: InterviewEntity[];
+      let hasScheduled: boolean;
       if (isMentor(req.session)) {
         interviews = await interviewRepo.find({where: {status: Not(InterviewStatus.cancelled)}, relations: ['student', 'mentor']});
+        hasScheduled = interviews.some(e => e.mentor.discordID === req.session.user.discordID);
       } else {
         interviews = await interviewRepo.find({where: {student: {discordID: req.session.user.discordID}, status: Not(InterviewStatus.cancelled)}, relations: ['student', 'mentor']});
+        hasScheduled = interviews.length > 0
       }
       const confirmedInterviews = interviews.filter(interview => interview.student && interview.mentor).sort((a, b) => compareAsc(new Date(a.startDate), new Date(b.startDate)))
       const result = {
-        hasScheduled: interviews.length > 0,
+        hasScheduled,
         closestInterview: confirmedInterviews.length ? confirmedInterviews[0] : null
       }
       res.json(result)
