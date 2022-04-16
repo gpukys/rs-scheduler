@@ -60,12 +60,7 @@ class App {
     this.app.use(morgan(LOG_FORMAT, { stream }));
     this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }));
     this.app.use(hpp());
-    this.app.use(helmet.contentSecurityPolicy({
-      directives: {
-        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-        "img-src": ["'self'", "http: data:", "https: data:"],
-      }
-    }));
+    this.app.use(helmet({contentSecurityPolicy: false}));
     this.app.use(compression());
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
@@ -101,8 +96,9 @@ class App {
     routes.forEach(route => {
       this.app.use('/api', route.router);
     });
-    this.app.use(express.static(path.join(__dirname, '../dist/public')));
-    this.app.use('*', express.static(path.join(__dirname, '../dist/public')));
+    console.log(__dirname)
+    this.app.use(express.static(path.join(__dirname, '/public')));
+    this.app.use('*', express.static(path.join(__dirname, '/public')));
   }
 
   private initializeErrorHandling() {
