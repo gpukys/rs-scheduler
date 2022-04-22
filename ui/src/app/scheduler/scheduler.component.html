@@ -7,7 +7,7 @@
     [viewDate]="today"
     [events]="events"
     [dayStartHour]="8"
-    [dayEndHour]="17"
+    [dayEndHour]="isMentor ? 18 : 17"
     [excludeDays]="[6,0]"
     [refresh]="refresh"
     [validateEventTimesChanged]="validate.bind(this)"

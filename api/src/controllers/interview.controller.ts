@@ -184,6 +184,10 @@ class InterviewController {
       next(new HttpException(400, 'Interview is not confirmed'))
       return;
     }
+    if (interview.mentor.discordID !== req.session.user.discordID) {
+      next(new HttpException(403, 'You can only cancel your own interviews'))
+      return;
+    }
 
     await dataSource.transaction(async (transactionalEntityManager) => {
       await interview.remove();

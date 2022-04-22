@@ -100,7 +100,7 @@ export class SchedulerComponent implements OnInit {
   handleSegmentClick(event: {date: Date}) {
     if (!this.isMentor) {
       if (!this.startDateValidator(event.date)) {
-        this.snackbar.show('Starting point must be equal or later than next working day 8:00');
+        this.snackbar.show('Starting point cannot be in the past');
         return;
       }
       const dialogRef = this.dialog.open(CreateInterviewComponent, {
@@ -181,7 +181,7 @@ export class SchedulerComponent implements OnInit {
   }
 
   private startDateValidator(date: Date) {
-    return isAfter(date, this.nextWorkingDayStart) || isEqual(date, this.nextWorkingDayStart)
+    return isAfter(date, new Date()) || isEqual(date, new Date())
   }
 
   private minimumDurationValidator(start: Date, end: Date | undefined) {

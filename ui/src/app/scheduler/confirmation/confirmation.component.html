@@ -15,6 +15,6 @@
 
 </div>
 <div mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
-  <button mat-button mat-dialog-close="" [disabled]="loading || form.invalid">Cancel</button>
+  <button mat-button mat-dialog-close="" [disabled]="loading">Close</button>
   <button mat-button color="primary" [disabled]="loading || form.invalid" (click)="confirm()" cdkFocusInitial>Confirm</button>
 </div>
