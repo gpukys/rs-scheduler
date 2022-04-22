@@ -6,7 +6,7 @@ import { isMentor } from "@/utils/isMentor";
 import { logger } from "@/utils/logger";
 import { NextFunction, Request, Response } from "express-serve-static-core";
 import { Not } from "typeorm";
-import { compareAsc } from 'date-fns'
+import { compareAsc, isAfter, isBefore } from 'date-fns'
 
 class InterviewController {
   
@@ -117,12 +117,12 @@ class InterviewController {
       let hasScheduled: boolean;
       if (isMentor(req.session)) {
         interviews = await interviewRepo.find({where: {status: Not(InterviewStatus.cancelled)}, relations: ['student', 'mentor']});
-        hasScheduled = interviews.some(e => e.mentor?.discordID === req.session.user.discordID);
+        hasScheduled = interviews.some(e => e.mentor?.discordID === req.session.user.discordID && isAfter(new Date(e.endDate), new Date()));
       } else {
         interviews = await interviewRepo.find({where: {student: {discordID: req.session.user.discordID}, status: Not(InterviewStatus.cancelled)}, relations: ['student', 'mentor']});
-        hasScheduled = interviews.length > 0
+        hasScheduled = interviews.filter(e => isAfter(new Date(e.endDate), new Date())).length > 0
       }
-      const confirmedInterviews = interviews.filter(interview => interview.student && interview.mentor).sort((a, b) => compareAsc(new Date(a.startDate), new Date(b.startDate)))
+      const confirmedInterviews = interviews.filter(interview => interview.student && interview.mentor && isAfter(new Date(interview.endDate), new Date())).sort((a, b) => compareAsc(new Date(a.startDate), new Date(b.startDate)))
       const result = {
         hasScheduled,
         closestInterview: confirmedInterviews.length ? confirmedInterviews[0] : null
