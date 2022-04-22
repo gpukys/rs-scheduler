@@ -116,8 +116,8 @@ class InterviewController {
       let interviews: InterviewEntity[];
       let hasScheduled: boolean;
       if (isMentor(req.session)) {
-        interviews = await interviewRepo.find({where: {status: Not(InterviewStatus.cancelled)}, relations: ['student', 'mentor']});
-        hasScheduled = interviews.some(e => e.mentor?.discordID === req.session.user.discordID && isAfter(new Date(e.endDate), new Date()));
+        interviews = await interviewRepo.find({where: {mentor: {discordID: req.session.user.discordID}, status: Not(InterviewStatus.cancelled)}, relations: ['student', 'mentor']});
+        hasScheduled = interviews.some(e => isAfter(new Date(e.endDate), new Date()));
       } else {
         interviews = await interviewRepo.find({where: {student: {discordID: req.session.user.discordID}, status: Not(InterviewStatus.cancelled)}, relations: ['student', 'mentor']});
         hasScheduled = interviews.filter(e => isAfter(new Date(e.endDate), new Date())).length > 0
