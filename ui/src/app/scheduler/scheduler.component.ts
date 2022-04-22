@@ -71,7 +71,7 @@ export class SchedulerComponent implements OnInit {
   }
 
   cantSeeNextWeek(): boolean {
-    return isAfter(add(this.today, {days: 7}), new Date('2022-04-29'));
+    return isAfter(add(this.today, {hours: 23, minutes: 59, seconds: 59}), new Date('2022-04-29'));
   }
 
   handleEventClick(event: any) {
