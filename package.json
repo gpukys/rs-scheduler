@@ -7,6 +7,9 @@
     "api",
     "ui"
   ],
+  "engines": {
+    "node": "16.14.2"
+  },
   "scripts": {
     "postinstall": "npm run -w ui build:ui && npm run -w api build:server",
     "test": "echo \"Error: no test specified\" && exit 1",
