@@ -5,7 +5,7 @@ import {fetch, Headers} from "node-fetch";
 
 class DiscordService {
 
-    apiURL = 'https://discord.com/api/v10';
+    apiURL = 'https://discord.com/api/v10/';
 
     async getAccessToken(code: string): Promise<AccessToken> {
         const body = new URLSearchParams({
