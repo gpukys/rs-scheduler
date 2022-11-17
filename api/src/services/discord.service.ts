@@ -24,7 +24,8 @@ class DiscordService {
         const { access_token: token, token_type: type } = response;
         return  { token, type };
       }
-      catch {
+      catch(e) {
+        console.log('error', e)
         return null;
       }
     }
