@@ -96,8 +96,8 @@ class App {
     routes.forEach(route => {
       this.app.use('/api', route.router);
     });
-    this.app.use(express.static(path.join(__dirname, '/public')));
-    this.app.use('*', express.static(path.join(__dirname, '/public')));
+    this.app.use(express.static(path.join(__dirname, '../dist/public')));
+    this.app.use('*', express.static(path.join(__dirname, '../dist/public')));
   }
 
   private initializeErrorHandling() {
