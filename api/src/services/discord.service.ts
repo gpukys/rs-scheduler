@@ -1,7 +1,7 @@
 import { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI } from "@/config";
 import { AccessToken, DiscordUser } from "@/models";
 import e from "express";
-import { fetch } from "node-fetch";
+import fetch from "node-fetch";
 
 class DiscordService {
 
