@@ -17,6 +17,8 @@ class DiscordService {
             code
         });
 
+        console.log(body.toString())
+
         const response = await fetch(`${this.apiURL}oauth2/token`, { 
             method: 'POST', 
             body
@@ -26,6 +28,7 @@ class DiscordService {
             const { access_token: token, token_type: type } = await response.json();
             return  { token, type };
         } else {
+            console.log(response);
             return null;
         }
 
