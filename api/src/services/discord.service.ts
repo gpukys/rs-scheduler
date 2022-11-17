@@ -1,7 +1,7 @@
 import { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI } from "@/config";
 import { AccessToken, DiscordUser } from "@/models";
 import e from "express";
-import {fetch, Headers} from "node-fetch";
+import { fetch } from "node-fetch";
 
 class DiscordService {
 
@@ -16,17 +16,12 @@ class DiscordService {
             scope: 'identify guilds guilds.members.read',
             code
         });
-
-        const headers = new Headers({
-          'Content-Type': 'application/x-www-form-urlencoded'
-        })
-
         console.log(body.toString())
 
         const response = await fetch(`${this.apiURL}oauth2/token`, { 
             method: 'POST', 
             body,
-            headers
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
 
         if (response.ok) {
