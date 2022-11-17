@@ -8,15 +8,16 @@ class DiscordService {
     apiURL = 'https://discord.com/api/v10/';
 
     async getAccessToken(code: string): Promise<AccessToken> {
-        const body = new URLSearchParams({
-            client_id: CLIENT_ID,
-            client_secret: CLIENT_SECRET,
-            redirect_uri: REDIRECT_URI,
-            grant_type: 'authorization_code',
-            scope: 'identify guilds guilds.members.read',
-            code
-        });
-        console.log(body.toString())
+      const body = `client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&grant_type=authorization_code&code=${code}&redirect_uri=${REDIRECT_URI}&scope=identify guilds guilds.members.read`;
+        // const body = new URLSearchParams({
+        //     client_id: CLIENT_ID,
+        //     client_secret: CLIENT_SECRET,
+        //     redirect_uri: REDIRECT_URI,
+        //     grant_type: 'authorization_code',
+        //     scope: 'identify guilds guilds.members.read',
+        //     code
+        // }).toString();
+        // console.log(body.toString())
 
         const response = await fetch(`${this.apiURL}oauth2/token`, { 
             method: 'POST', 
