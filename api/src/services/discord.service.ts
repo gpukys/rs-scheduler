@@ -3,36 +3,30 @@ import { AccessToken, DiscordUser } from "@/models";
 import e from "express";
 import fetch from "node-fetch";
 
+
 class DiscordService {
 
     apiURL = 'https://discord.com/api/v10/';
 
     async getAccessToken(code: string): Promise<AccessToken> {
-      const body = `client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&grant_type=authorization_code&code=${code}&redirect_uri=${REDIRECT_URI}&scope=identify guilds guilds.members.read`;
-        // const body = new URLSearchParams({
-        //     client_id: CLIENT_ID,
-        //     client_secret: CLIENT_SECRET,
-        //     redirect_uri: REDIRECT_URI,
-        //     grant_type: 'authorization_code',
-        //     scope: 'identify guilds guilds.members.read',
-        //     code
-        // }).toString();
-        // console.log(body.toString())
-
-        const response = await fetch(`${this.apiURL}oauth2/token`, { 
-            method: 'POST', 
-            body,
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        });
-
-        if (response.ok) {
-            const { access_token: token, token_type: type } = await response.json();
-            return  { token, type };
-        } else {
-            console.log(response);
-            return null;
-        }
-
+      const DiscordOauth2 = require("discord-oauth2");
+      const oauth = new DiscordOauth2();
+      
+      try {
+        const response = await oauth.tokenRequest({
+          clientId: CLIENT_ID,
+          clientSecret: CLIENT_SECRET,
+          code,
+          scope: "identify guilds guilds.members.read",
+          grantType: "authorization_code",
+          redirectUri: REDIRECT_URI,
+        })
+        const { access_token: token, token_type: type } = response;
+        return  { token, type };
+      }
+      catch {
+        return null;
+      }
     }
 
     async getMemberRolesInGuild(guildId: string, accessToken: AccessToken): Promise<string[]> {
