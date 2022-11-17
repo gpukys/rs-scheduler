@@ -11,13 +11,13 @@ class DiscordService {
     async getAccessToken(code: string): Promise<AccessToken> {
       const DiscordOauth2 = require("discord-oauth2");
       const oauth = new DiscordOauth2();
-      console.log({CLIENT_ID, CLIENT_SECRET, REDIRECT_URI})
+      console.log({CLIENT_ID, CLIENT_SECRET})
       try {
         const response = await oauth.tokenRequest({
           clientId: CLIENT_ID,
           clientSecret: CLIENT_SECRET,
           code,
-          scope: "identify guilds",
+          scope: "identify guilds guilds.members.read",
           grantType: "authorization_code",
           redirectUri: REDIRECT_URI,
         })
