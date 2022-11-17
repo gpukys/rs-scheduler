@@ -1,11 +1,11 @@
 import { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI } from "@/config";
 import { AccessToken, DiscordUser } from "@/models";
 import e from "express";
-import fetch from "node-fetch";
+import {fetch, Headers} from "node-fetch";
 
 class DiscordService {
 
-    apiURL = 'https://discord.com/api/';
+    apiURL = 'https://discord.com/api/v10';
 
     async getAccessToken(code: string): Promise<AccessToken> {
         const body = new URLSearchParams({
@@ -17,11 +17,16 @@ class DiscordService {
             code
         });
 
+        const headers = new Headers({
+          'Content-Type': 'application/x-www-form-urlencoded'
+        })
+
         console.log(body.toString())
 
         const response = await fetch(`${this.apiURL}oauth2/token`, { 
             method: 'POST', 
-            body
+            body,
+            headers
         });
 
         if (response.ok) {
