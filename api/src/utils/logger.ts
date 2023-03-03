@@ -4,8 +4,7 @@ import winston from 'winston';
 import winstonDaily from 'winston-daily-rotate-file';
 import { LOG_DIR } from '@config';
 // logs dir
-console.log(__dirname)
-const logDir: string = path.join(__dirname, LOG_DIR);
+const logDir: string = path.join(__dirname, LOG_DIR || '../logs');
 
 if (!existsSync(logDir)) {
   mkdirSync(logDir);
